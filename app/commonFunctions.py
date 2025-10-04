@@ -19,14 +19,15 @@ def insertInvoice(canonicalInvoice):
         issue_date, due_date, posting_date, currency, payment_terms_code, payment_terms_days,
         subtotal, tax, grand_total
         ) VALUES (
-        ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+        ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
     );"""
 
     cursor.execute(insertInvoice, (invoice['id'], invoice['sourceSystem'], supplier['code'], supplier['name'], supplier['address'], supplier['contactEmail'],
         dates['issueDate'], dates['dueDate'], dates['postingDate'], invoice['currency'], paymentTerms['code'], paymentTerms['days'],
-        totals['subtotal'], totals['tax'], totals['grandTotal']))
+        totals['subtotal'], totals['tax'], totals['grandTotal'])
+    )
     
-    query = cursor.execute("""SELECT * FROM invoice""")
+    query = cursor.execute("""SELECT * FROM invoices""").fetchall()
 
     conn.commit()
     conn.close()
