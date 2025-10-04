@@ -1,4 +1,4 @@
-from datetime import date
+import commonFunctions
 
 
 
@@ -9,9 +9,6 @@ def convertVendor(vendor):
         'address': vendor['address'],
         'contactEmail': vendor['contact_email']
     }
-
-def calculatePaymentDays(fromDate, toDate):
-    return (date.fromisoformat(toDate) - date.fromisoformat(fromDate)).days
 
 def calculateTotal(taxRate, unitPrice, quantity):
     unitTotal = unitPrice * quantity
@@ -44,7 +41,7 @@ def vendorInvoiceTranslation(vendorInvoice):
         'currency': vendorInvoice['currency'],
         'paymentTerms': {
             'code': vendorInvoice['payment_terms'],
-            'days': calculatePaymentDays(vendorInvoice['invoice_date'], vendorInvoice['due_date'])
+            'days': commonFunctions.calculatePaymentDays(vendorInvoice['invoice_date'], vendorInvoice['due_date'])
         },
         'lineItems': convertLineItems(vendorInvoice['line_items']),
         'totals': vendorInvoice['totals'],
