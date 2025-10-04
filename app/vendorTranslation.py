@@ -28,6 +28,13 @@ def convertLineItems(items):
         })
     return lineItems
 
+def convertTotals(totals):
+    return {
+        'subtotal': totals['subtotal'],
+        'tax': totals['tax'],
+        'grandTotal': totals['grand_total']
+    }
+
 def vendorInvoiceTranslation(vendorInvoice):
     invoice = {
         'id': vendorInvoice['invoice_id'],
@@ -44,7 +51,7 @@ def vendorInvoiceTranslation(vendorInvoice):
             'days': commonFunctions.calculatePaymentDays(vendorInvoice['invoice_date'], vendorInvoice['due_date'])
         },
         'lineItems': convertLineItems(vendorInvoice['line_items']),
-        'totals': vendorInvoice['totals'],
+        'totals': convertTotals(vendorInvoice['totals']),
         'status': {
             'code': 'OPEN',
             'mappedFrom': 'VENDOR'

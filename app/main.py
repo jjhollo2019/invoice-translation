@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify, Response
 from pathlib import Path
 from flask_json_schema import JsonSchema, JsonValidationError
+from commonFunctions import insertInvoice
 import vendorTranslation, erpTranslation, json
 
 
@@ -23,7 +24,11 @@ def validation_error(e):
 @app.route('/vendorInvoice', methods=['POST'])
 @schema.validate(vendorSchema)
 def vendorResponse():
-    return vendorTranslation.vendorInvoiceTranslation(request.json)
+    vendorInvoice = vendorTranslation.vendorInvoiceTranslation(request.json)
+    return insertInvoice(vendorInvoice)
+    return 200
+
+
 
 @app.route('/erpInvoice', methods=['POST'])
 @schema.validate(erpSchema)
