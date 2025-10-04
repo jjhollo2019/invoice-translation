@@ -13,6 +13,23 @@ def convertVendor(vendor):
 def calculatePaymentDays(fromDate, toDate):
     return (date.fromisoformat(toDate) - date.fromisoformat(fromDate)).days
 
+def calculateTotal(taxRate, unitPrice, quantity):
+    unitTotal = unitPrice * quantity
+    taxTotal = unitTotal * taxRate
+    return round(unitTotal + taxTotal, 2)
+
+def convertLineItems(items):
+    lineItems = []
+    for item in items:
+        lineItems.append({
+            'lineNumber': item['line_id'],
+            'description': item['description'],
+            'quantity': item['quantity'],
+            'unitPrice': item['unit_price'],
+            'taxRate': item['tax_rate'],
+            'lineTotal': calculateTotal(item['tax_rate'], item['unit_price'], item['quantity'])
+        })
+    return lineItems
 
 def vendorInvoiceTranslation(vendorInvoice):
     invoice = {
@@ -28,6 +45,12 @@ def vendorInvoiceTranslation(vendorInvoice):
         'paymentTerms': {
             'code': vendorInvoice['payment_terms'],
             'days': calculatePaymentDays(vendorInvoice['invoice_date'], vendorInvoice['due_date'])
+        },
+        'lineItems': convertLineItems(vendorInvoice['line_items']),
+        'totals': vendorInvoice['totals'],
+        'status': {
+            'code': 'OPEN',
+            'mappedFrom': 'VENDOR'
         }
     }
     
