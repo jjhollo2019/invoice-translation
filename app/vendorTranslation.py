@@ -1,7 +1,8 @@
 import commonFunctions
 
+# Translates vendor invoice data into a standardized format
 
-
+# Converts vendor information
 def convertVendor(vendor):
     return {
         'code': vendor['vendor_id'],
@@ -10,11 +11,13 @@ def convertVendor(vendor):
         'contactEmail': vendor['contact_email']
     }
 
+# Calculates line total including tax
 def calculateTotal(taxRate, unitPrice, quantity):
     unitTotal = unitPrice * quantity
     taxTotal = unitTotal * taxRate
     return round(unitTotal + taxTotal, 2)
 
+# Converts line items from vendor format to standardized format
 def convertLineItems(items):
     lineItems = []
     for item in items:
@@ -30,6 +33,7 @@ def convertLineItems(items):
         })
     return lineItems
 
+# Converts totals from vendor format to standardized format
 def convertTotals(totals):
     return {
         'subtotal': totals['subtotal'],
@@ -37,7 +41,9 @@ def convertTotals(totals):
         'grandTotal': totals['grand_total']
     }
 
+# Main function to translate vendor invoice
 def vendorInvoiceTranslation(vendorInvoice):
+    # Build the standardized invoice structure
     invoice = {
         'id': vendorInvoice['invoice_id'],
         'sourceSystem': "Vendor_Invoice",
@@ -60,6 +66,7 @@ def vendorInvoiceTranslation(vendorInvoice):
         }
     }
     
+    # Return the translated invoice
     return {
         'invoice': invoice
     }
