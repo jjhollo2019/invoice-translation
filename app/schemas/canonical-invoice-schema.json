@@ -1,0 +1,98 @@
+{
+  "$schema": "http://json-schema.org/draft/2020-12/schema",
+  "title": "Normalized Invoice",
+  "type": "object",
+  "properties": {
+    "invoice": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "sourceSystem": { "type": "string" },
+        "supplier": {
+          "type": "object",
+          "properties": {
+            "code": { "type": "string" },
+            "name": { "type": "string" },
+            "address": { "type": "string" },
+            "contactEmail": { "type": "string", "format": "email" }
+          },
+          "required": ["code", "name"]
+        },
+        "dates": {
+          "type": "object",
+          "properties": {
+            "issueDate": { "type": "string", "format": "date" },
+            "dueDate": { "type": "string", "format": "date" },
+            "postingDate": { "type": "string", "format": "date" }
+          },
+          "required": ["issueDate", "dueDate"]
+        },
+        "currency": { "type": "string", "enum": ["USD", "EUR", "GBP", "CAD"] },
+        "paymentTerms": {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "string",
+              "enum": ["NET15", "NET30", "NET45", "DUEONRECEIPT"]
+            },
+            "days": { "type": "integer" }
+          },
+          "required": ["code", "days"]
+        },
+        "lineItems": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "lineNumber": { "type": "integer" },
+              "sku": { "type": "string" },
+              "description": { "type": "string" },
+              "uom": { "type": "string", "enum": ["EA", "CS", "BOX", "PKG"] },
+              "quantity": { "type": "number" },
+              "unitPrice": { "type": "number" },
+              "taxRate": { "type": "number" },
+              "lineTotal": { "type": "number" }
+            },
+            "required": [
+              "lineNumber",
+              "description",
+              "quantity",
+              "unitPrice",
+              "lineTotal"
+            ]
+          }
+        },
+        "totals": {
+          "type": "object",
+          "properties": {
+            "subtotal": { "type": "number" },
+            "tax": { "type": "number" },
+            "grandTotal": { "type": "number" }
+          },
+          "required": ["subtotal", "grandTotal"]
+        },
+        "status": {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "string",
+              "enum": ["OPEN", "PAID", "PARTIAL", "VOID"]
+            },
+            "mappedFrom": { "type": "string" }
+          },
+          "required": ["code"]
+        }
+      },
+      "required": [
+        "id",
+        "supplier",
+        "dates",
+        "currency",
+        "lineItems",
+        "totals",
+        "status"
+      ]
+    }
+  },
+  "required": ["invoice"]
+}

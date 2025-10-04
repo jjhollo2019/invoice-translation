@@ -1,0 +1,58 @@
+{
+  "$schema": "http://json-schema.org/draft/2020-12/schema",
+  "title": "Vendor Invoice",
+  "type": "object",
+  "properties": {
+    "invoice_id": { "type": "string" },
+    "vendor": {
+      "type": "object",
+      "properties": {
+        "vendor_id": { "type": "string" },
+        "name": { "type": "string" },
+        "address": { "type": "string" },
+        "contact_email": { "type": "string", "format": "email" }
+      },
+      "required": ["vendor_id", "name"]
+    },
+    "invoice_date": { "type": "string", "format": "date" },
+    "due_date": { "type": "string", "format": "date" },
+    "currency": { "type": "string", "enum": ["USD", "EUR", "GBP", "JPY"] },
+    "line_items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "line_id": { "type": "string" },
+          "description": { "type": "string" },
+          "quantity": { "type": "number" },
+          "unit_price": { "type": "number" },
+          "tax_rate": { "type": "number" }
+        },
+        "required": ["line_id", "description", "quantity", "unit_price"]
+      }
+    },
+    "totals": {
+      "type": "object",
+      "properties": {
+        "subtotal": { "type": "number" },
+        "tax": { "type": "number" },
+        "grand_total": { "type": "number" }
+      },
+      "required": ["subtotal", "grand_total"]
+    },
+    "status": { "type": "string", "enum": ["OPEN", "PAID", "PARTIAL", "VOID"] },
+    "payment_terms": {
+      "type": "string",
+      "enum": ["NET15", "NET30", "NET45", "DUEONRECEIPT"]
+    }
+  },
+  "required": [
+    "invoice_id",
+    "vendor",
+    "invoice_date",
+    "currency",
+    "line_items",
+    "totals",
+    "status"
+  ]
+}
