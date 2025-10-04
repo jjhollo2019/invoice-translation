@@ -1,4 +1,4 @@
-
+from datetime import date
 
 
 
@@ -9,6 +9,9 @@ def convertVendor(vendor):
         'address': vendor['address'],
         'contactEmail': vendor['contact_email']
     }
+
+def calculatePaymentDays(fromDate, toDate):
+    return (date.fromisoformat(toDate) - date.fromisoformat(fromDate)).days
 
 
 def vendorInvoiceTranslation(vendorInvoice):
@@ -22,7 +25,10 @@ def vendorInvoiceTranslation(vendorInvoice):
             'postingDate': vendorInvoice['invoice_date']
         },
         'currency': vendorInvoice['currency'],
-        'paymentTerms': 
+        'paymentTerms': {
+            'code': vendorInvoice['payment_terms'],
+            'days': calculatePaymentDays(vendorInvoice['invoice_date'], vendorInvoice['due_date'])
+        }
     }
     
     return {
