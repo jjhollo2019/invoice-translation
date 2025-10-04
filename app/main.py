@@ -1,11 +1,11 @@
-from flask import Flask, jsonify
-import subprocess
+from flask import Flask, request, jsonify
+import subprocess, vendorTranslation
 
 app = Flask(__name__)
 
-@app.route('/invoice', methods=['POST'])
+@app.route('/vendorInvoice', methods=['POST'])
 def returnResponse():
-    return "api response"
+    return vendorTranslation.vendorInvoiceTranslation(request.json)
 
 if __name__ == '__main__':
     app.run()
