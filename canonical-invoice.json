@@ -1,0 +1,54 @@
+{
+    "invoice": {
+      "id": "INV-2025-001",
+      "sourceSystem": "VendorAPI",
+      "supplier": {
+        "code": "SUP-ACME-001",
+        "name": "Acme Supplies LLC",
+        "address": "123 Main St, Greenville, SC, 29601",
+        "contactEmail": "billing@acmesupplies.com"
+      },
+      "dates": {
+        "issueDate": "2025-09-28",
+        "dueDate": "2025-10-28",
+        "postingDate": "2025-09-28"
+      },
+      "currency": "USD",
+      "paymentTerms": {
+        "code": "NET30",
+        "days": 30
+      },
+      "lineItems": [
+        {
+          "lineNumber": 1,
+          "sku": "PAPER-CASE10",
+          "description": "Printer Paper (Case of 10)",
+          "uom": "CS",
+          "quantity": 2,
+          "unitPrice": 45.00,
+          "taxRate": 0.07,
+          "lineTotal": 90.00
+        },
+        {
+          "lineNumber": 2,
+          "sku": "INK-BLK-01",
+          "description": "Ink Cartridge - Black",
+          "uom": "EA",
+          "quantity": 4,
+          "unitPrice": 29.50,
+          "taxRate": 0.07,
+          "lineTotal": 118.00
+        }
+      ],
+      "totals": {
+        "subtotal": 208.00,
+        "tax": 14.56,
+        "grandTotal": 222.56
+      },
+      "status": {
+        "code": "OPEN",
+        "mappedFrom": "01"
+      }
+    }
+  }
+  

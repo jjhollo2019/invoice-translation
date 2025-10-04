@@ -1,0 +1,96 @@
+invoice:
+  id:
+    type: string
+    description: Internal unique invoice ID. May originate from vendor or ERP system.
+  sourceSystem:
+    type: string
+    description: Indicates origin of the invoice (e.g., VendorAPI, ERP).
+
+  supplier:
+    code:
+      type: string
+      description: Normalized supplier code or identifier.
+    name:
+      type: string
+      description: Supplier name.
+    address:
+      type: string
+      description: Supplier billing address.
+    contactEmail:
+      type: string
+      description: Supplier contact email for billing.
+
+  dates:
+    issueDate:
+      type: date
+      description: Original invoice issue date.
+    dueDate:
+      type: date
+      description: Date payment is due.
+    postingDate:
+      type: date
+      description: Date invoice entered into system (ERP or internal).
+
+  currency:
+    type: string
+    enum: [USD, EUR, GBP, CAD]
+    description: Standardized ISO 4217 currency code.
+
+  paymentTerms:
+    code:
+      type: string
+      enum: [NET15, NET30, NET45, DUEONRECEIPT]
+      description: Payment terms in normalized format.
+    days:
+      type: integer
+      description: Numeric representation of payment window.
+
+  lineItems:
+    type: array
+    description: List of standardized line items.
+    items:
+      lineNumber:
+        type: integer
+        description: Sequential line number.
+      sku:
+        type: string
+        description: Product or service identifier, if available.
+      description:
+        type: string
+        description: Item description.
+      uom:
+        type: string
+        enum: [EA, CS, BOX, PKG]
+        description: Normalized unit of measure.
+      quantity:
+        type: number
+        description: Number of units purchased.
+      unitPrice:
+        type: number
+        description: Price per unit.
+      taxRate:
+        type: number
+        description: Applied tax rate (decimal form).
+      lineTotal:
+        type: number
+        description: Extended line total before tax.
+
+  totals:
+    subtotal:
+      type: number
+      description: Invoice subtotal before tax.
+    tax:
+      type: number
+      description: Total calculated tax.
+    grandTotal:
+      type: number
+      description: Final payable amount.
+
+  status:
+    code:
+      type: string
+      enum: [OPEN, PAID, PARTIAL, VOID]
+      description: Standardized status code across all sources.
+    mappedFrom:
+      type: string
+      description: Original system status value (e.g., ERP code “01”).

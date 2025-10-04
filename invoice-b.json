@@ -1,0 +1,38 @@
+{
+    "documentNumber": "100234",
+    "documentType": "AP_INVOICE",
+    "supplierCode": "SUP-ACME-001",
+    "supplierName": "Acme Supplies LLC",
+    "postingDate": "2025-09-28",
+    "dueDate": "2025-10-28",
+    "currencyCode": "USD",
+    "paymentTermCode": "N30",
+    "items": [
+      {
+        "sku": "PAPER-CASE10",
+        "description": "Printer Paper (Case of 10)",
+        "uom": "CS",
+        "qty": 2,
+        "price": 45.00,
+        "lineAmount": 90.00
+      },
+      {
+        "sku": "INK-BLK-01",
+        "description": "Ink Cartridge - Black",
+        "uom": "EA",
+        "qty": 4,
+        "price": 29.50,
+        "lineAmount": 118.00
+      }
+    ],
+    "taxes": [
+      {
+        "taxCode": "SALES",
+        "taxPercent": 7,
+        "taxAmount": 14.56
+      }
+    ],
+    "totalAmount": 222.56,
+    "statusCode": "01"
+  }
+  

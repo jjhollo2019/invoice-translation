@@ -1,0 +1,35 @@
+{
+  "invoice_id": "INV-2025-001",
+  "vendor": {
+    "vendor_id": "V-10045",
+    "name": "Acme Supplies LLC",
+    "address": "123 Main St, Greenville, SC, 29601",
+    "contact_email": "billing@acmesupplies.com"
+  },
+  "invoice_date": "2025-09-28",
+  "due_date": "2025-10-28",
+  "currency": "USD",
+  "line_items": [
+    {
+      "line_id": "1",
+      "description": "Printer Paper (Case of 10)",
+      "quantity": 2,
+      "unit_price": 45.00,
+      "tax_rate": 0.07
+    },
+    {
+      "line_id": "2",
+      "description": "Ink Cartridge - Black",
+      "quantity": 4,
+      "unit_price": 29.50,
+      "tax_rate": 0.07
+    }
+  ],
+  "totals": {
+    "subtotal": 208.00,
+    "tax": 14.56,
+    "grand_total": 222.56
+  },
+  "status": "OPEN",
+  "payment_terms": "NET30"
+}

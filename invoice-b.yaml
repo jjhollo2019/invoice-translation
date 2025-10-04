@@ -1,0 +1,79 @@
+documentNumber:
+  type: string
+  description: ERP-generated document number.
+
+documentType:
+  type: string
+  enum: [AP_INVOICE, AR_INVOICE, CREDIT_MEMO]
+  description: Type of financial document.
+
+supplierCode:
+  type: string
+  description: Internal ERP code for the supplier.
+
+supplierName:
+  type: string
+  description: Supplier's registered name.
+
+postingDate:
+  type: date
+  description: Date invoice was entered into ERP system.
+dueDate:
+  type: date
+  description: Payment due date.
+currencyCode:
+  type: string
+  enum: [USD, EUR, GBP, CAD]
+  description: Currency used in the document.
+
+paymentTermCode:
+  type: string
+  enum: [N15, N30, N45, IMMEDIATE]
+  description: Abbreviated payment term code.
+
+items:
+  type: array
+  description: List of invoiced items.
+  items:
+    sku:
+      type: string
+      description: Stock keeping unit (product identifier).
+    description:
+      type: string
+      description: Description of the item.
+    uom:
+      type: string
+      enum: [EA, CS, BOX, PKG]
+      description: Unit of measure.
+    qty:
+      type: number
+      description: Quantity of items.
+    price:
+      type: number
+      description: Unit price.
+    lineAmount:
+      type: number
+      description: Extended line total (qty × price).
+
+taxes:
+  type: array
+  description: Tax details applied to invoice.
+  items:
+    taxCode:
+      type: string
+      enum: [SALES, VAT, GST]
+      description: Type of tax.
+    taxPercent:
+      type: number
+      description: Tax percentage applied.
+    taxAmount:
+      type: number
+      description: Amount of tax charged.
+
+totalAmount:
+  type: number
+  description: Invoice total including tax.
+statusCode:
+  type: string
+  enum: ["00", "01", "02", "99"]
+  description: ERP status code (00 = Draft, 01 = Open, 02 = Paid, 99 = Cancelled).

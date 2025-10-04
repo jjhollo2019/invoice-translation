@@ -1,0 +1,68 @@
+invoice_id:
+  type: string
+  description: Unique invoice identifier assigned by the vendor.
+
+vendor:
+  vendor_id:
+    type: string
+    description: Unique identifier for the vendor.
+  name:
+    type: string
+    description: Vendor's legal or trading name.
+  address:
+    type: string
+    description: Mailing address for the vendor.
+  contact_email:
+    type: string
+    description: Billing contact email address.
+
+invoice_date:
+  type: date
+  description: Date the invoice was issued.
+due_date:
+  type: date
+  description: Payment due date.
+currency:
+  type: string
+  enum: [USD, EUR, GBP, JPY]
+  description: Currency used for the invoice.
+
+line_items:
+  type: array
+  description: List of goods or services billed on the invoice.
+  items:
+    line_id:
+      type: string
+      description: Unique line reference ID.
+    description:
+      type: string
+      description: Item description.
+    quantity:
+      type: number
+      description: Number of units.
+    unit_price:
+      type: number
+      description: Price per unit.
+    tax_rate:
+      type: number
+      description: Applicable tax rate as a decimal.
+
+totals:
+  subtotal:
+    type: number
+    description: Pre-tax total.
+  tax:
+    type: number
+    description: Total calculated tax.
+  grand_total:
+    type: number
+    description: Final amount due.
+
+status:
+  type: string
+  enum: [OPEN, PAID, PARTIAL, VOID]
+  description: Current state of the invoice.
+payment_terms:
+  type: string
+  enum: [NET15, NET30, NET45, DUEONRECEIPT]
+  description: Payment terms agreed upon with vendor.
