@@ -8,7 +8,7 @@ def convertLineItems(items, taxRate):
     for item in items:
         itemTax = round(item['price'] * taxRate, 2)
         lineItems.append({
-            'lineNumber': item,
+            'lineNumber': items.index(item) + 1,
             'sku': item['sku'],
             'description': item['description'],
             'uom': item['uom'],
@@ -38,10 +38,12 @@ def erpInvoiceTranslation(erpInvoice):
         'sourceSystem': "ERP",
         'supplier': {
             'code': erpInvoice['supplierCode'],
-            'name': erpInvoice['supplierName']
+            'name': erpInvoice['supplierName'],
+            'address': '',
+            'contactEmail': ''
         },
         'dates': {
-            'issuedDate': erpInvoice['postingDate'],
+            'issueDate': erpInvoice['postingDate'],
             'dueDate': erpInvoice['dueDate'],
             'postingDate': erpInvoice['postingDate']
         },
@@ -52,7 +54,7 @@ def erpInvoiceTranslation(erpInvoice):
         },
         'lineItems': convertLineItems(erpInvoice['items'], salesTax),
         'totals': {
-            'subTotal': sumChargesByKey(erpInvoice['items'], 'lineAmount'),
+            'subtotal': sumChargesByKey(erpInvoice['items'], 'lineAmount'),
             'tax': sumChargesByKey(erpInvoice['taxes'], 'taxAmount'),
             'grandTotal': erpInvoice['totalAmount']
         },

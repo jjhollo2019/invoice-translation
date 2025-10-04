@@ -36,7 +36,12 @@ def vendorResponse():
 @app.route('/erpInvoice', methods=['POST'])
 @schema.validate(erpSchema)
 def erpResponse():
-    return erpTranslation.erpInvoiceTranslation(request.json)
+    erpInvoice = erpTranslation.erpInvoiceTranslation(request.json)
+    insertSuccess = insertInvoice(erpInvoice)
+    if insertSuccess:
+        return Response(status=200)
+    else:
+        return Response(status=400)
 
 if __name__ == '__main__':
     app.run()
