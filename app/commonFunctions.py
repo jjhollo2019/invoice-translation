@@ -10,6 +10,7 @@ def insertInvoice(canonicalInvoice):
     paymentTerms = invoice['paymentTerms']
     dates = invoice['dates']
     totals = invoice['totals']
+
     conn = sqlite3.connect('invoice_tables.db')
     cursor = conn.cursor()
 
@@ -28,10 +29,42 @@ def insertInvoice(canonicalInvoice):
     )
     
     query = cursor.execute("""SELECT * FROM invoices""").fetchall()
+    print(query)
+
+    insertInvoiceLineItems = """INSERT INTO invoice_line_items (
+    invoice_id, line_number, sku, description, uom, quantity, unit_price, tax_rate, line_total
+    ) VALUES
+    (?, ?, ?, ?, ?, ?, ?, ?, ?);"""
+
+    lineItemsData = []
+    for item in invoice['lineItems']:
+        lineItemsData.append((
+            invoice['id'], item['lineNumber'], item['sku'], item['description'], item['uom'], item['quantity'],
+            item['unitPrice'], item['taxRate'], item['lineTotal']
+        ))
+
+    cursor.executemany(insertInvoiceLineItems, lineItemsData).fetchall()
+
+    itemResponse = cursor.execute("""SELECT * FROM invoice_line_items""").fetchall()
+    print(itemResponse)
+
+    insertInvoiceStatus = """INSERT INTO invoice_status (
+    invoice_id, status_code, mapped_from
+    ) VALUES
+    (?, ?, ?);"""
+
+    cursor.execute(insertInvoiceStatus, (invoice['id'], invoice['status']['code'], invoice['status']['mappedFrom']))
+
+    statusResponse = cursor.execute("""SELECT * FROM invoice_status""").fetchall()
+    print(statusResponse)
 
     conn.commit()
     conn.close()
-    return query
+    return True
+    # if query[0].id == invoice['id']:
+    #     return True
+    # else:
+    #     return False
 
     
     # Example for inserting multiple rows using executemany()

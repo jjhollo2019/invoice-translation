@@ -20,7 +20,9 @@ def convertLineItems(items):
     for item in items:
         lineItems.append({
             'lineNumber': item['line_id'],
+            'sku': '',
             'description': item['description'],
+            'uom': 'EA',
             'quantity': item['quantity'],
             'unitPrice': item['unit_price'],
             'taxRate': item['tax_rate'],

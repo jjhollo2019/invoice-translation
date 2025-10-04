@@ -25,8 +25,11 @@ def validation_error(e):
 @schema.validate(vendorSchema)
 def vendorResponse():
     vendorInvoice = vendorTranslation.vendorInvoiceTranslation(request.json)
-    return insertInvoice(vendorInvoice)
-    return 200
+    insertSuccess = insertInvoice(vendorInvoice)
+    if insertSuccess:
+        return Response(status=200)
+    else:
+        return Response(status=400)
 
 
 
