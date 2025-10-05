@@ -7,6 +7,65 @@ from datetime import date
 def calculatePaymentDays(fromDate, toDate):
     return (date.fromisoformat(toDate) - date.fromisoformat(fromDate)).days
 
+def getInvoiceById(invoiceId: str) -> Dict[str, Any]:
+    conn = sqlite3.connect('invoice_tables.db')
+    conn.row_factory = sqlite3.Row
+    cur = conn.cursor()
+
+    # Get invoice with status
+    cur.execute("""
+        SELECT i.*, s.status_code, s.mapped_from
+        FROM invoices i
+        JOIN invoice_status s ON i.invoice_id = s.invoice_id
+        WHERE i.invoice_id = ?;
+    """, (invoiceId,))
+    inv = cur.fetchone()
+
+    if not inv:
+        return {}
+
+    # Get line items for the invoice
+    cur.execute("SELECT * FROM invoice_line_items WHERE invoice_id = ?;", (invoiceId,))
+    line_items = cur.fetchall()
+    conn.close()
+
+    # Build JSON in Python
+    inv_lines = [dict(li) for li in line_items]
+    invoice_json = {
+        "invoice": {
+            "id": inv["invoice_id"],
+            "sourceSystem": inv["source_system"],
+            "supplier": {
+                "code": inv["supplier_code"],
+                "name": inv["supplier_name"],
+                "address": inv["supplier_address"],
+                "contactEmail": inv["supplier_contact_email"]
+            },
+            "dates": {
+                "issueDate": inv["issue_date"],
+                "dueDate": inv["due_date"],
+                "postingDate": inv["posting_date"]
+            },
+            "currency": inv["currency"],
+            "paymentTerms": {
+                "code": inv["payment_terms_code"],
+                "days": inv["payment_terms_days"]
+            },
+            "lineItems": inv_lines,
+            "totals": {
+                "subtotal": inv["subtotal"],
+                "tax": inv["tax"],
+                "grandTotal": inv["grand_total"]
+            },
+            "status": {
+                "code": inv["status_code"],
+                "mappedFrom": inv["mapped_from"]
+            }
+        }
+    }
+    print("Returned Get Query:",invoice_json)
+    return invoice_json
+
 # Function to insert a canonical invoice into the database
 def insertInvoice(canonicalInvoice):
     # create helper variable
@@ -77,9 +136,7 @@ def insertInvoice(canonicalInvoice):
     # Commit the transaction and close the connection
     conn.commit()
     conn.close()
-
-    # return success
-    return True
+    return True 
 
 def getAllInvoices():
     conn = sqlite3.connect('invoice_tables.db')
@@ -141,5 +198,3 @@ def getAllInvoices():
         })
 
     return invoices_json
-
-

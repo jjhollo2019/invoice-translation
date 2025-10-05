@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify, Response
 from pathlib import Path
 from flask_json_schema import JsonSchema, JsonValidationError
-from commonFunctions import insertInvoice, getAllInvoices
+from commonFunctions import insertInvoice, getAllInvoices, getInvoiceById
 import vendorTranslation, erpTranslation, json
 
 # create relative paths to the schema files
@@ -29,11 +29,13 @@ def validation_error(e):
 @schema.validate(vendorSchema)
 def vendorResponse():
     vendorInvoice = vendorTranslation.vendorInvoiceTranslation(request.json)
+    print(vendorInvoice)
     insertSuccess = insertInvoice(vendorInvoice)
+    print(insertSuccess)
     if insertSuccess:
-        return Response(status=201)
+        return getInvoiceById(vendorInvoice['invoice']['id']), 201
     else:
-        return Response(status=400)
+        return 400
 
 
 
@@ -43,14 +45,22 @@ def erpResponse():
     erpInvoice = erpTranslation.erpInvoiceTranslation(request.json)
     insertSuccess = insertInvoice(erpInvoice)
     if insertSuccess:
-        return Response(status=201)
+        return getInvoiceById(erpInvoice['invoice']['id']), 201
     else:
-        return Response(status=400)
+        return 400
 
 @app.route('/getAllInvoices', methods=['GET'])
 def getInvoices():
     allInvoices = getAllInvoices()
     return allInvoices, 200
+
+@app.route('/getInvoiceById/<invoiceId>', methods=['GET'])
+def getInvoice(invoiceId):
+    invoice = getInvoiceById(invoiceId)
+    if invoice:
+        return invoice, 200
+    else:
+        return 404
 
 # Run the Flask app
 if __name__ == '__main__':
