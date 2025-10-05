@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify, Response
 from pathlib import Path
 from flask_json_schema import JsonSchema, JsonValidationError
-from commonFunctions import insertInvoice
+from commonFunctions import insertInvoice, getAllInvoices
 import vendorTranslation, erpTranslation, json
 
 # create relative paths to the schema files
@@ -46,6 +46,11 @@ def erpResponse():
         return Response(status=200)
     else:
         return Response(status=400)
+
+@app.route('/getAllInvoices', methods=['GET'])
+def getInvoices():
+    allInvoices = getAllInvoices()
+    return allInvoices, 200
 
 # Run the Flask app
 if __name__ == '__main__':

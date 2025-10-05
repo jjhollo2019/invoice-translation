@@ -1,4 +1,6 @@
 import sqlite3
+import json
+from typing import List, Dict, Any
 from datetime import date
 
 # Common function to calculate payment days between two dates
@@ -78,3 +80,66 @@ def insertInvoice(canonicalInvoice):
 
     # return success
     return True
+
+def getAllInvoices():
+    conn = sqlite3.connect('invoice_tables.db')
+    conn.row_factory = sqlite3.Row
+    cur = conn.cursor()
+
+    # Get invoices with status
+    cur.execute("""
+        SELECT i.*, s.status_code, s.mapped_from
+        FROM invoices i
+        JOIN invoice_status s ON i.invoice_id = s.invoice_id
+    """)
+    invoices = cur.fetchall()
+
+    # Get line items
+    cur.execute("SELECT * FROM invoice_line_items;")
+    line_items = cur.fetchall()
+    conn.close()
+
+    # Build JSON in Python
+    invoices_json = []
+    for inv in invoices:
+        inv_lines = [
+            dict(li)
+            for li in line_items
+            if li["invoice_id"] == inv["invoice_id"]
+        ]
+        invoices_json.append({
+            "invoice": {
+                "id": inv["invoice_id"],
+                "sourceSystem": inv["source_system"],
+                "supplier": {
+                    "code": inv["supplier_code"],
+                    "name": inv["supplier_name"],
+                    "address": inv["supplier_address"],
+                    "contactEmail": inv["supplier_contact_email"]
+                },
+                "dates": {
+                    "issueDate": inv["issue_date"],
+                    "dueDate": inv["due_date"],
+                    "postingDate": inv["posting_date"]
+                },
+                "currency": inv["currency"],
+                "paymentTerms": {
+                    "code": inv["payment_terms_code"],
+                    "days": inv["payment_terms_days"]
+                },
+                "lineItems": inv_lines,
+                "totals": {
+                    "subtotal": inv["subtotal"],
+                    "tax": inv["tax"],
+                    "grandTotal": inv["grand_total"]
+                },
+                "status": {
+                    "code": inv["status_code"],
+                    "mappedFrom": inv["mapped_from"]
+                }
+            }
+        })
+
+    return invoices_json
+
+
