@@ -50,8 +50,7 @@ invoice_status_create = """
     FOREIGN KEY (invoice_id) REFERENCES invoices(invoice_id)
 );"""
 
-
-
+# Define the CREATE TABLE SQL statement for suppliers
 suppliers_table_create = """
     CREATE TABLE suppliers (
     supplier_code TEXT PRIMARY KEY,           
@@ -70,6 +69,7 @@ suppliers_table_create = """
     created_at TEXT DEFAULT CURRENT_TIMESTAMP
 );"""
 
+# Sample supplier data to insert into the suppliers table
 insert_supplier_data = """
 INSERT INTO suppliers (
     supplier_code, supplier_name, address_line1, city, state, postal_code,

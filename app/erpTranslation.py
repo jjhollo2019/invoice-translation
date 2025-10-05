@@ -38,12 +38,18 @@ def sumChargesByKey(charges, key):
 
 def getSupplierDetails(supplierCode):
     print("Fetching supplier details for code:", supplierCode)
+    # Fetch supplier details from the suppliers table
+    # Connect to the database
     conn = sqlite3.connect('invoice_tables.db')
     cursor = conn.cursor()
+    # Query the suppliers table
     cursor.execute("SELECT * FROM suppliers WHERE supplier_code = ?", (supplierCode,))
+    # Fetch one result
     supplier = cursor.fetchone()
     print(supplier)
+    # Close the connection
     conn.close()
+    # Return supplier details or default values if not found
     if supplier:
         return {
             'code': supplier[0],
@@ -63,6 +69,7 @@ def getSupplierDetails(supplierCode):
 def erpInvoiceTranslation(erpInvoice):
     # Assume sales tax is identified by the code "SALES"
     salesTax = findTaxPercentByCode(erpInvoice['taxes'], "SALES")
+    # Get supplier details from the suppliers table
     supplierCode = erpInvoice['supplierCode']
     supplierDetails = getSupplierDetails(supplierCode)
     # Build the standardized invoice structure
