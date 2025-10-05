@@ -1,4 +1,5 @@
 import commonFunctions
+import sqlite3
 
 # ERP Invoice Translation Functions
 
@@ -35,19 +36,44 @@ def sumChargesByKey(charges, key):
         total += charge[key]
     return total
 
+def getSupplierDetails(supplierCode):
+    print("Fetching supplier details for code:", supplierCode)
+    conn = sqlite3.connect('invoice_tables.db')
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM suppliers WHERE supplier_code = ?", (supplierCode,))
+    supplier = cursor.fetchone()
+    print(supplier)
+    conn.close()
+    if supplier:
+        return {
+            'code': supplier[0],
+            'name': supplier[1],
+            'address': f"{supplier[2]}, {supplier[3]}, {supplier[4]}, {supplier[5]} {supplier[6]}, {supplier[7]}",
+            'contactEmail': supplier[8]
+        }
+    else:
+        return {
+            'code': supplierCode,
+            'name': 'Unknown Supplier',
+            'address': '',
+            'contactEmail': ''
+        }
+
 # Main function to translate ERP invoice to standard format
 def erpInvoiceTranslation(erpInvoice):
     # Assume sales tax is identified by the code "SALES"
     salesTax = findTaxPercentByCode(erpInvoice['taxes'], "SALES")
+    supplierCode = erpInvoice['supplierCode']
+    supplierDetails = getSupplierDetails(supplierCode)
     # Build the standardized invoice structure
     invoice = {
         'id': erpInvoice['documentNumber'],
         'sourceSystem': "ERP",
         'supplier': {
-            'code': erpInvoice['supplierCode'],
+            'code': supplierCode,
             'name': erpInvoice['supplierName'],
-            'address': '',
-            'contactEmail': ''
+            'address': supplierDetails['address'],
+            'contactEmail': supplierDetails['contactEmail']
         },
         'dates': {
             'issueDate': erpInvoice['postingDate'],
