@@ -31,7 +31,7 @@ def vendorResponse():
     vendorInvoice = vendorTranslation.vendorInvoiceTranslation(request.json)
     insertSuccess = insertInvoice(vendorInvoice)
     if insertSuccess:
-        return Response(status=200)
+        return Response(status=201)
     else:
         return Response(status=400)
 
@@ -43,7 +43,7 @@ def erpResponse():
     erpInvoice = erpTranslation.erpInvoiceTranslation(request.json)
     insertSuccess = insertInvoice(erpInvoice)
     if insertSuccess:
-        return Response(status=200)
+        return Response(status=201)
     else:
         return Response(status=400)
 
