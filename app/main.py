@@ -28,10 +28,10 @@ def validation_error(e):
 @app.route('/vendorInvoice', methods=['POST'])
 @schema.validate(vendorSchema)
 def vendorResponse():
+    #translate the vendor invoice to canonical format
     vendorInvoice = vendorTranslation.vendorInvoiceTranslation(request.json)
-    print(vendorInvoice)
+    # insert the canonical invoice into the database
     insertSuccess = insertInvoice(vendorInvoice)
-    print(insertSuccess)
     if insertSuccess:
         return getInvoiceById(vendorInvoice['invoice']['id']), 201
     else:
@@ -42,21 +42,29 @@ def vendorResponse():
 @app.route('/erpInvoice', methods=['POST'])
 @schema.validate(erpSchema)
 def erpResponse():
+    #translate the erp invoice to canonical format
     erpInvoice = erpTranslation.erpInvoiceTranslation(request.json)
+    # insert the canonical invoice into the database
     insertSuccess = insertInvoice(erpInvoice)
     if insertSuccess:
         return getInvoiceById(erpInvoice['invoice']['id']), 201
     else:
         return 400
 
+# Define route to get all invoices
 @app.route('/getAllInvoices', methods=['GET'])
 def getInvoices():
+    # Retrieve all invoices from the database
     allInvoices = getAllInvoices()
+    # Return the list of invoices as a JSON response
     return allInvoices, 200
 
+# Define route to get a specific invoice by ID
 @app.route('/getInvoiceById/<invoiceId>', methods=['GET'])
 def getInvoice(invoiceId):
+    # Retrieve the invoice with the specified ID from the database
     invoice = getInvoiceById(invoiceId)
+    # Return the invoice as a JSON response if found, otherwise return 404
     if invoice:
         return invoice, 200
     else:
